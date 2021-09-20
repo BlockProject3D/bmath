@@ -26,4 +26,56 @@
 // NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 // SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-pub mod vector;
+pub trait Vec2<T>
+{
+    fn x(&mut self) -> &mut T;
+    fn y(&mut self) -> &mut T;
+}
+
+pub struct Vector<T: Sized, const N: usize>
+{
+    data: [T; N]
+}
+
+impl<T: Sized, const N: usize> Vector<T, N>
+{
+    pub fn new(data: [T; N]) -> Vector<T, N>
+    {
+        return Vector {
+            data
+        };
+    }
+}
+
+impl<T: Sized, T1: Into<T>> From<(T1, T1)> for Vector<T, 2>
+{
+    fn from((x, y): (T1, T1)) -> Vector<T, 2>
+    {
+        return Vector::new([x.into(), y.into()]);
+    }
+}
+
+impl<T: Sized> Vec2<T> for Vector<T, 2>
+{
+    fn x(&mut self) -> &mut T
+    {
+        return &mut self.data[0];
+    }
+
+    fn y(&mut self) -> &mut T
+    {
+        return &mut self.data[1];
+    }
+}
+
+impl<T: Sized + Clone, const N: usize> Clone for Vector<T, N>
+{
+    fn clone(&self) -> Vector<T, N>
+    {
+        return Vector::new(self.data.clone());
+    }
+}
+
+impl<T: Sized + Clone + Copy, const N: usize> Copy for Vector<T, N> {}
+
+pub type Vec2f = Vector<f32, 2>;
